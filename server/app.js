@@ -25,7 +25,6 @@ app.listen(config.port, config.host, error => {
 app.post('/register', (req, res) => {
     $.query(`SELECT * FROM blog.users WHERE username = '${req.body.username}'`, (err, data) => {
         if(err) res.send("-1");
-        console.log(data);
 
         if(data.length) {
             res.send("User already existing!");
@@ -75,6 +74,30 @@ app.post('/password', (req, res) => {
 
 app.post('/username', (req, res) => {
     $.query(`UPDATE blog.users SET username = '${req.body.username}' WHERE id = '${req.body.id}'`, (err, data) => {
+        if(err) res.send(err);
+
+        res.send(data);
+    });
+});
+
+app.post('/uploadPost', (req, res) => {
+    $.query(`INSERT INTO blog.posts (authorName, content) VALUES ('${req.body.username}', '${req.body.content}')`, (err, data) => {
+        if(err) res.send(err);
+
+        res.send(data);
+    });
+});
+
+app.get('/users', (req, res) => {
+    $.query(`SELECT * FROM blog.users`, (err, data) => {
+        if(err) res.send(err);
+
+        res.send(JSON.stringify(data));
+    });
+});
+
+app.get('/posts', (req, res) => {
+    $.query(`SELECT * FROM blog.posts`, (err, data) => {
         if(err) res.send(err);
 
         res.send(data);
